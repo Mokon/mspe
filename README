@@ -1,0 +1,46 @@
+(C) 2010-2013 David Bond, All Rights Reserved
+
+Welcome to the Mokon Software Project Estimator (4). This program is a tool for
+estimating elements of a software project.
+
+At this current time there are only some tools for using the COCOMO (1) and
+COCOMO II (2) models for estimating how much it would cost to develop a program.
+This really is only a header file that must be included in a program similar to
+the demo program given. This program you create will set up some various factors
+in the COCOMO II model and use the COCOMO II class. At some point down the line
+I hope to make this into a proper program you install and which takes a
+configuration file to compute information on your project.
+
+src/COCOMOII.hpp... This header file contains the COCOMOII algorithm in the form
+...................   of the COCOMOII class.
+src/Demo.cpp....... This source file contains a simple program which shows you
+...................   how to use the COCOMOII class.
+demo_report.cpp.... This script shows you an example way to use the demo program
+...................   to print information about your project. You can use this
+...................   as the basis for a script in your own program. In
+...................   particular this script used the UCC program (3) to count
+...................   lines of code in the project.
+
+
+To build this program you need autotools. In general on Fedora if you need to
+install these run:
+  yum groupinstall "Development Tools"
+If you are on a different distro it shouldn't be too hard to find out how to do
+this.
+
+One you do that the build process is standard autotools. Do a:
+  ./bootstrap
+  ./configure
+  make
+  make install
+The standard autotools options are supported.
+
+This software is licensed under the MIT License. For the text of this license
+see the file called LICENSE.
+
+References
+----------
+(1) http://en.wikipedia.org/wiki/COCOMO
+(2) http://csse.usc.edu/csse/research/COCOMOII/cocomo_main.html
+(3) http://sunset.usc.edu/research/CODECOUNT
+(4) http://mokon.net

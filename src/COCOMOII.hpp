@@ -1,14 +1,10 @@
-/* Copyright (C) 2012-2013 David Bond, All Rights Reserved */
+/* Copyright (C) 2012-2015 David Bond, All Rights Reserved */
 
 #pragma once
 
-#include <string>
-#include <iostream>
-#include <stdio.h>
-#include <glog/logging.h>
-#include <numeric>
-#include <functional>
-#include <math.h>
+#include <cmath>
+
+namespace mspe {
 
 enum EAF_TYPES {
   TOOL = 0,
@@ -27,16 +23,18 @@ enum EAF_TYPES {
   PCON,
   AEXP,
   PEXP,
-  LTEX
-} ;
+  LTEX,
+  MAX_EAF
+};
 
 enum SF_TYPES {
   PREC = 0,
   FLEX,
   ARCH,
   COHE,
-  MATU
-} ;
+  MATU,
+  MAX_SF
+};
 
 enum RATINGS {
   VERY_LOW = 0,
@@ -44,123 +42,125 @@ enum RATINGS {
   NOMINAL,
   HIGH,
   VERY_HIGH,
-  EXTRA_HIGH
-} ;
+  EXTRA_HIGH,
+  MAX_RATINGS
+};
 
-class COCOMOII  {
+class COCOMOII {
 
   public:
 
-    COCOMOII( ) {
-      setEAF( TOOL, NOMINAL ) ;
-      setEAF( SITE, NOMINAL ) ;
-      setEAF( SCED, NOMINAL ) ;
-      setEAF( RELY, NOMINAL ) ;
-      setEAF( DATA, NOMINAL ) ;
-      setEAF( RUSE, NOMINAL ) ;
-      setEAF( DOCU, NOMINAL ) ;
-      setEAF( CPLX, NOMINAL ) ;
-      setEAF( TIME, NOMINAL ) ;
-      setEAF( STOR, NOMINAL ) ;
-      setEAF( PVOL, NOMINAL ) ;
-      setEAF( ACAP, NOMINAL ) ;
-      setEAF( PCAP, NOMINAL ) ;
-      setEAF( PCON, NOMINAL ) ;
-      setEAF( AEXP, NOMINAL ) ;
-      setEAF( PEXP, NOMINAL ) ;
-      setEAF( LTEX, NOMINAL ) ;
-      setSF( PREC, NOMINAL ) ;
-      setSF( FLEX, NOMINAL ) ;
-      setSF( ARCH, NOMINAL ) ;
-      setSF( COHE, NOMINAL ) ;
-      setSF( MATU, NOMINAL ) ;
-    } ;
+    COCOMOII() {
+      setEAF(TOOL, NOMINAL);
+      setEAF(SITE, NOMINAL);
+      setEAF(SCED, NOMINAL);
+      setEAF(RELY, NOMINAL);
+      setEAF(DATA, NOMINAL);
+      setEAF(RUSE, NOMINAL);
+      setEAF(DOCU, NOMINAL);
+      setEAF(CPLX, NOMINAL);
+      setEAF(TIME, NOMINAL);
+      setEAF(STOR, NOMINAL);
+      setEAF(PVOL, NOMINAL);
+      setEAF(ACAP, NOMINAL);
+      setEAF(PCAP, NOMINAL);
+      setEAF(PCON, NOMINAL);
+      setEAF(AEXP, NOMINAL);
+      setEAF(PEXP, NOMINAL);
+      setEAF(LTEX, NOMINAL);
+      setSF(PREC, NOMINAL);
+      setSF(FLEX, NOMINAL);
+      setSF(ARCH, NOMINAL);
+      setSF(COHE, NOMINAL);
+      setSF(MATU, NOMINAL);
+    };
 
-    virtual ~COCOMOII() {
-    } ;
+    virtual ~COCOMOII() = default;
 
-    double EFFORT( ) {
-      double prod= 1 ;
-      for( int i = 0 ; i < MAX_EAF ; i++ ) {
-        prod *= EAF[i] ;
+    COCOMOII(COCOMOII&&) = delete;
+
+    COCOMOII& operator=(COCOMOII&&) = delete;
+
+    COCOMOII(const COCOMOII&) = delete;
+
+    COCOMOII& operator=(const COCOMOII&) = delete;
+
+    double EFFORT() {
+      double prod= 1;
+      for(int i = 0; i < MAX_EAF; ++i) {
+        prod *= EAF[i];
       }
-      return prod * constant * pow( SLOC, B( ) ) ;
+      return prod*constant*std::pow(SLOC, B());
     }
 
-    double B( ) {
-      double sum= 0 ;
-      for( int i = 0 ; i < MAX_SF ; i++ ) {
-        sum += SF[i] ;
+    double B() {
+      double sum = 0;
+      for(int i = 0; i < MAX_SF; ++i) {
+        sum += SF[i];
       }
-      return bconstant + bconstant2 * sum ;
+      return bconstant+bconstant2*sum;
     }
 
-    double TDEV( ) {
-      return tdevconstant * pow( EFFORT( ),
-        tdevconstant2 + tdevconstant3 * ( B( ) - tdevconstant4 ) ) ;
+    double TDEV() {
+      return tdevconstant*std::pow(EFFORT(),
+        tdevconstant2 + tdevconstant3*(B() - tdevconstant4));
     }
 
-    double COSTANDOVERHEAD( ) {
-      return overhead * COST( ) ;
+    double COSTANDOVERHEAD() {
+      return overhead*COST();
     }
 
-    double COST( ) {
-      return salary * EFFORT( ) / 12 ;
+    double COST() {
+      return salary*EFFORT()/12;
     }
 
-    void setEAF( EAF_TYPES type, RATINGS rating ) {
-      EAF[type] = EAF_VALUES[type][rating] ;
+    void setEAF(EAF_TYPES type, RATINGS rating) {
+      EAF[type] = EAF_VALUES[type][rating];
     }
 
-    void setSF( SF_TYPES type, RATINGS rating ) {
-      SF[type] = SF_VALUES[type][rating] ;
+    void setSF(SF_TYPES type, RATINGS rating) {
+      SF[type] = SF_VALUES[type][rating];
     }
 
-    void setSLOC( double SLOC ) {
-      this->SLOC = SLOC ;
+    void setSLOC(double SLOC) {
+      this->SLOC = SLOC;
     }
 
-    void setSalary( double salary ) {
-      this->salary = salary ;
+    void setSalary(double salary) {
+      this->salary = salary;
     }
 
-    void setOverhead( double overhead ) {
-      this->overhead = overhead ;
+    void setOverhead(double overhead) {
+      this->overhead = overhead;
     }
 
-   constexpr static double constant = 2.94 ;
+   constexpr static double constant = 2.94;
 
-   constexpr static double bconstant = 0.91 ;
+   constexpr static double bconstant = 0.91;
 
-   constexpr static double bconstant2 = 0.01 ;
+   constexpr static double bconstant2 = 0.01;
 
-   constexpr static double tdevconstant = 3.67 ;
+   constexpr static double tdevconstant = 3.67;
 
-   constexpr static double tdevconstant2 = 0.28 ;
+   constexpr static double tdevconstant2 = 0.28;
 
-   constexpr static double tdevconstant3 = 0.2 ;
+   constexpr static double tdevconstant3 = 0.2;
 
-   constexpr static double tdevconstant4 = 0.91 ;
+   constexpr static double tdevconstant4 = 0.91;
 
-   const static int MAX_EAF = 17 ;
+   double overhead;
 
-   const static int MAX_SF = 5 ;
+   double salary;
 
-   const static int MAX_RATINGS = 6 ;
+   double SLOC;
 
-   double overhead ;
+   double EAF[MAX_EAF];
 
-   double salary ;
+   double SF[MAX_SF];
 
-   double SLOC ;
+   static double EAF_VALUES[MAX_EAF][MAX_RATINGS];
 
-   double EAF[MAX_EAF] ;
-
-   double SF[MAX_SF] ;
-
-   static double EAF_VALUES[MAX_EAF][MAX_RATINGS] ;
-
-   static double SF_VALUES[MAX_SF][MAX_RATINGS] ;
+   static double SF_VALUES[MAX_SF][MAX_RATINGS];
 
 } ;
 
@@ -183,7 +183,7 @@ double COCOMOII::EAF_VALUES[MAX_EAF][MAX_RATINGS] = {
      /* AEXP */ {     1.22, 1.10,    1.00, 0.88,      0.81,       0.00 },
      /* PEXP */ {     1.19, 1.09,    1.00, 0.91,      0.85,       0.00 },
      /* LTEX */ {     1.20, 1.09,    1.00, 0.91,      0.84,       0.00 },
-   } ;
+   };
 
 double COCOMOII::SF_VALUES[MAX_SF][MAX_RATINGS] = {
      /* SF      { Very Low,  Low, Nominal, High, Very High, Extra High */
@@ -192,4 +192,6 @@ double COCOMOII::SF_VALUES[MAX_SF][MAX_RATINGS] = {
      /* ARCH */ {     7.07, 5.65,    4.24, 2.83,      1.41,       0.00 },
      /* COHE */ {     5.48, 4.38,    3.29, 2.19,      1.10,       0.00 },
      /* MATU */ {     7.80, 6.24,    4.68, 3.12,      1.56,       0.00 },
-   } ;
+   };
+
+} // namespace mspe

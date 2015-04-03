@@ -1,3 +1,1 @@
-#!/bin/sh
-# (C) 2010-2013 David Bond, All Rights Reserved
-autoreconf -f --install --no-recursive
+mcommon/templates/bootstrap

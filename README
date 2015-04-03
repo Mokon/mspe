@@ -1,25 +1,26 @@
-(C) 2010-2013 David Bond, All Rights Reserved
+(C) 2010-2015 David Bond, All Rights Reserved
 
 Welcome to the Mokon Software Project Estimator (4). This program is a tool for
 estimating elements of a software project.
 
-At this current time there are only some tools for using the COCOMO (1) and
-COCOMO II (2) models for estimating how much it would cost to develop a program.
-This really is only a header file that must be included in a program similar to
-the demo program given. This program you create will set up some various factors
-in the COCOMO II model and use the COCOMO II class. At some point down the line
-I hope to make this into a proper program you install and which takes a
-configuration file to compute information on your project.
+This package has some tools for using the COCOMO (1) and COCOMO II (2) models
+for estimating how much it would cost to develop a program. This contains a
+header file and a simple api program to be run with the given script.
+This program you create will set up some various factors in the COCOMO II model
+and use the COCOMO II class. At some point I may make the api program take the
+COCOMMII options as input so more than the generic team options presented are
+available.
 
-src/COCOMOII.hpp... This header file contains the COCOMOII algorithm in the form
-...................   of the COCOMOII class.
-src/Demo.cpp....... This source file contains a simple program which shows you
-...................   how to use the COCOMOII class.
-demo_report.cpp.... This script shows you an example way to use the demo program
-...................   to print information about your project. You can use this
-...................   as the basis for a script in your own program. In
-...................   particular this script used the UCC program (3) to count
-...................   lines of code in the project.
+src/COCOMOII.hpp.... This header file contains the COCOMOII algorithm in the
+....................   form of the COCOMOII class.
+src/COCOMOIIApi.cpp. This source file contains a simple program which shows you
+....................   how to use the COCOMOII class. For more info it can be
+....................   run with the command 'mspe --usage'.
+src/mspe_report..... This script shows you an example way to use the api program
+....................   to print information about your project. You can use this
+....................   as the basis for a script in your own program. In
+....................   particular this script used the UCC (3) and sloccount(5)
+....................   programs to count the lines of code in the project.
 
 
 To build this program you need autotools. In general on Fedora if you need to
@@ -28,7 +29,7 @@ install these run:
 If you are on a different distro it shouldn't be too hard to find out how to do
 this.
 
-One you do that the build process is standard autotools. Do a:
+One you do that the build process is standard autotools. To build and install:
   ./bootstrap
   ./configure
   make
@@ -38,9 +39,20 @@ The standard autotools options are supported.
 This software is licensed under the MIT License. For the text of this license
 see the file called LICENSE.
 
+The associated mspe_report script requires UCC and sloccount.
+
+To install sloccount on fedora:
+  yum install sloccount.x86_64 
+
+To install UCC you will have to jump through some hoops. First you need to sign
+up on their webpage(3) after which you can download a zip with the source code
+for UCC. extract that and enter the ucc folder. type make. This will create a
+file bin/UCC. There is no install command so this will have to be done manually.
+
 References
 ----------
 (1) http://en.wikipedia.org/wiki/COCOMO
 (2) http://csse.usc.edu/csse/research/COCOMOII/cocomo_main.html
 (3) http://sunset.usc.edu/research/CODECOUNT
 (4) http://mokon.net
+(5) http://www.dwheeler.com/sloccount/

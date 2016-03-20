@@ -27,6 +27,10 @@ LSLOC=`cat C_CPP_outfile.csv |grep Logical |grep -v SLOC |grep -v Total \
 [ -f outfile_*.csv ] && rm outfile_*.csv
 [ -f Duplicate*.csv ] && rm Duplicate*.csv
 
+if [ -z $LSLOC ] ; then
+  LSLOC=$PSLOC
+fi
+
 function echo_line {
   echo "------------------------------------------------------------------------------"
 }
